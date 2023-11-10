@@ -1003,6 +1003,60 @@ h6 {
   margin-top: 1.375rem;
 }
 
+.intersection {
+  position: relative;
+  margin: 0 auto;
+  width: 81.25rem;
+  height: 41.875rem;
+  background: url("../img/tests/intersections/1.jpg");
+  overflow: hidden;
+}
+
+.car {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+           supported by Chrome, Edge, Opera and Firefox */
+  cursor: pointer;
+  position: absolute;
+}
+.car img {
+  position: relative;
+}
+.car:hover .count {
+  opacity: 1;
+}
+.car .count {
+  transition: opacity 0.2s ease-in-out;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.intersectionCenter {
+  width: 22.0625rem;
+  height: 18rem;
+  background-color: #fff;
+  opacity: 0.2;
+  position: absolute;
+  left: 458px;
+  top: 220px;
+}
+
 .sidebar {
   flex-shrink: 0;
   z-index: 2;
