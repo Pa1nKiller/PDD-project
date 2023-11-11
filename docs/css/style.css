@@ -1012,6 +1012,15 @@ h6 {
   overflow: hidden;
 }
 
+.border {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: green 1px solid;
+}
+
 .centerPoint {
   position: absolute;
   width: 0.3125rem;
