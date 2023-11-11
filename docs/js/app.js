@@ -90,6 +90,190 @@
         }
     }
     const js_adittional = Adittional;
+    class Car {
+        constructor(direction = "default", intersectionCenter, path, x, y, deg) {
+            this.path = path;
+            this.carHtml = document.createElement("div");
+            this.carImg = document.createElement("img");
+            this.count = document.createElement("span");
+            this.deg = deg;
+            this.direction = direction;
+            this.carImg.src = this.path;
+            this.carHtml.appendChild(this.carImg);
+            this.carHtml.appendChild(this.count);
+            this.count.classList.add("count");
+            this.carHtml.classList.add("car");
+            this.carHtml.style.top = y + "px";
+            this.carHtml.style.left = x + "px";
+            this.carHtml.style.rotate = this.deg + "deg";
+            document.querySelector(".intersection").appendChild(this.carHtml);
+            let intersection = document.querySelector(".intersection");
+            intersection = window.getComputedStyle(intersection);
+            this.intersectionWidth = this.removePX(intersection.getPropertyValue("width")) + 60;
+            this.intersectionHeight = this.removePX(intersection.getPropertyValue("height")) + 60;
+            let style = window.getComputedStyle(this.carHtml);
+            this.carY = this.removePX(style.getPropertyValue("top"));
+            this.carX = this.removePX(style.getPropertyValue("left"));
+            this.intersectionCenter = window.getComputedStyle(intersectionCenter);
+            Number();
+            this.Il = this.removePX(this.intersectionCenter.getPropertyValue("left"));
+            this.It = this.removePX(this.intersectionCenter.getPropertyValue("top"));
+            this.Iw = this.removePX(this.intersectionCenter.getPropertyValue("width"));
+            this.Ih = this.removePX(this.intersectionCenter.getPropertyValue("height"));
+            this.points();
+            this.clickCarHtml();
+        }
+        points() {
+            let center = document.createElement("div");
+            this.centerPointY = this.It + this.Ih / 2;
+            this.centerPointX = this.Il + this.Iw / 2;
+            center.classList.add("centerPoint");
+            center.style.top = this.centerPointY + "px";
+            center.style.left = this.centerPointX + "px";
+            document.querySelector(".intersection").appendChild(center);
+        }
+        moveTop() {
+            if (this.centerPointY < this.carY && this.centerPointX < this.carX) {
+                let delayedLoop = () => {
+                    setTimeout((() => {
+                        this.carY--;
+                        this.carHtml.style.top = this.carY + "px";
+                        if (this.carY < this.intersectionHeight) delayedLoop(); else return;
+                    }), 2);
+                };
+                delayedLoop();
+            } else if (this.centerPointY > this.carY && this.centerPointX > this.carX) {
+                let delayedLoop = () => {
+                    setTimeout((() => {
+                        this.carX++;
+                        this.carHtml.style.left = this.carX + "px";
+                        if (this.carX < this.intersectionWidth) delayedLoop();
+                    }), 2);
+                };
+                delayedLoop();
+            } else if (this.centerPointY > this.carY && this.centerPointX > this.carX) {
+                let delayedLoop = () => {
+                    setTimeout((() => {
+                        this.carY++;
+                        this.carHtml.style.top = this.carY + "px";
+                        if (this.carY > this.intersectionHeight) delayedLoop();
+                    }), 2);
+                };
+                delayedLoop();
+            } else if (this.centerPointY > this.carY && this.centerPointX < this.carX) {
+                let delayedLoop = () => {
+                    setTimeout((() => {
+                        this.carX--;
+                        this.carHtml.style.left = this.carX + "px";
+                        if (this.carX > -220) delayedLoop();
+                    }), 2);
+                };
+                delayedLoop();
+            }
+        }
+        removePX(str) {
+            return Number(str.substring(0, str.length - 2));
+        }
+        move() {
+            this.moveDeg();
+            return;
+        }
+        smoothRotate(element, rotationAngle, duration) {
+            let startAngle = Number(this.carHtml.style.rotate.substring(0, this.carHtml.style.rotate.length - 3));
+            let startTime = null;
+            let animateRotate = timestamp => {
+                if (!startTime) startTime = timestamp;
+                const progress = timestamp - startTime;
+                const currentAngle = easeInOutCubic(progress, startAngle, rotationAngle, duration);
+                if (currentAngle + 1 > startAngle + rotationAngle && currentAngle - 1 < startAngle + rotationAngle) {
+                    console.log("1");
+                    this.direction = "default";
+                    this.deg = currentAngle;
+                    this.moveDeg();
+                    return;
+                }
+                element.style.rotate = `${currentAngle}deg`;
+                if (progress < duration) requestAnimationFrame(animateRotate);
+            };
+            requestAnimationFrame(animateRotate);
+            function easeInOutCubic(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t * t + b;
+                t -= 2;
+                return c / 2 * (t * t * t + 2) + b;
+            }
+        }
+        clickCarHtml() {
+            this.carHtml.addEventListener("click", (() => {
+                for (let index = 0; index < window.cars.length; index++) {
+                    const element = window.cars[index];
+                    if (element == this) return;
+                }
+                window.cars.push(this);
+                this.carHtml.querySelector(".count").innerHTML = window.cars.length;
+                if (window.cars.length == 3) window.start();
+            }));
+        }
+        moveDeg() {
+            console.log("ТУТ");
+            if (this.deg > 89 && this.deg < 91) this.plusX();
+            if (this.deg > 179 && this.deg < 181) this.plusY();
+            if (this.deg > -89 && this.deg < -91) this.minusX();
+            if (this.deg > -1 && this.deg < 1) this.minusY();
+        }
+        plusX() {
+            if (this.direction == "default") {
+                let delayedLoop = () => {
+                    setTimeout((() => {
+                        this.carX++;
+                        this.carHtml.style.left = this.carX + "px";
+                        if (this.carX < this.intersectionWidth) delayedLoop();
+                    }), 2);
+                };
+                delayedLoop();
+            } else {
+                let delayedLoop = () => {
+                    setTimeout((() => {
+                        this.carX++;
+                        this.carHtml.style.left = this.carX + "px";
+                        if (this.carX - 20 < this.centerPointX) delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3);
+                    }), 2);
+                };
+                delayedLoop();
+            }
+        }
+        plusY() {
+            let delayedLoop = () => {
+                setTimeout((() => {
+                    this.carY++;
+                    this.carHtml.style.top = this.carY + "px";
+                    if (this.carY < this.intersectionHeight) delayedLoop();
+                }), 2);
+            };
+            delayedLoop();
+        }
+        minusX() {
+            let delayedLoop = () => {
+                setTimeout((() => {
+                    this.carX--;
+                    this.carHtml.style.left = this.carX + "px";
+                    if (this.carX > -220) delayedLoop();
+                }), 2);
+            };
+            delayedLoop();
+        }
+        minusY() {
+            let delayedLoop = () => {
+                setTimeout((() => {
+                    this.carY--;
+                    this.carHtml.style.top = this.carY + "px";
+                    if (this.carY > -220) delayedLoop(); else return;
+                }), 2);
+            };
+            delayedLoop();
+        }
+    }
+    const js_Car = Car;
     const adittionalDB_namespaceObject = JSON.parse('{"generalProvisions":{"general":{"title":"Общие положения","subtitle":["1. Дорога и Пешеходы","2. Правило правой руки","3. Светофоры и Знаки","4. Скорость и Дистанция","5. Алкоголь и Наркотики","6. Сотовые телефоны","7. Другие Участники Движения"],"img":["./img/theory/generalProvisions/1/1.jpg","./img/theory/generalProvisions/1/2.jpg","./img/theory/generalProvisions/1/3.jpg","./img/theory/generalProvisions/1/4.jpg","./img/theory/generalProvisions/1/5.jpg","./img/theory/generalProvisions/1/6.jpg","./img/theory/generalProvisions/1/7.jpg"],"text":[["Дорога - это не просто полоса асфальта. Это место, где каждый участник движения должен соблюдать правила и уважать друг друга.","Пешеходы - наши самые уязвимые участники. Помни, что они всегда имеют преимущество на пешеходных переходах."],["В большинстве стран движение на дороге праворульное. Это означает, что при пересечении других транспортных средств, уступай дорогу тем, кто едет справа."],["Подчиняйтесь светофорам и дорожным знакам. Они указывают, когда можно двигаться и когда нужно остановиться."],["Соблюдай разумную скорость и безопасное расстояние между автомобилями. Это позволяет избежать аварий."],["Никогда не управляй транспортным средством, находясь под воздействием алкоголя или наркотиков. Это опасно и незаконно."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"generalTwo":{"title":"Общие обязанности водителей","subtitle":["1. Сосредоточенность и Безотвлекаемость","2. Скоростной Режим","3. Передача Приоритета","4. Наличие документов","5. Уступать Пешеходам"],"img":["./img/theory/generalProvisions/2/1.jpg",null,"./img/theory/generalProvisions/2/2.jpg","./img/theory/generalProvisions/2/3.jpg","./img/theory/generalProvisions/2/4.jpg"],"text":[["Внимание на дороге - главное правило. Избегайте отвлекающих действий, таких как разговоры по телефону."],["Уважайте ограничения скорости. Не превышайте их, чтобы обеспечить безопасность всех на дороге."],["Правильно уступайте дорогу согласно правилам. Помните о приоритетах."],["Водитель транспортного средства обязан иметь при себе удостоверение и по требованию сотрудников полиции передавать им, для проверки."],["Пешеходы всегда имеют преимущество на пешеходных переходах. Уступайте дорогу им."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"generalThree":{"title":"Применение специальных сигналов","subtitle":["1. Специальные сигналы","2. Сирена и Мигающие Маячки","3. Уступите Дорогу","4. Будьте Осторожны"],"img":["./img/theory/generalProvisions/3/1.jpg","./img/theory/generalProvisions/3/2.jpg","./img/theory/generalProvisions/3/3.jpg","./img/theory/generalProvisions/3/4.jpg"],"text":[["Специальные сигналы - это средство, которое используется служебными и аварийными транспортными средствами для обозначения их приоритета на дороге."],["Специальные сигналы обычно включают сирену и мигающие маячки. Это предупреждает других участников движения о неотложности их задачи."],["Когда вы видите служебное аварийное транспортное средство с включенными специальными сигналами, вы должны уступить дорогу и пропустить его."],["Водители должны быть особенно осторожными, когда видят транспортное средство с включенными специальными сигналами. Это может быть связано с неотложной медицинской помощью, пожаром или другой аварией. Важно помнить, что специальные сигналы используются для обеспечения безопасности и сохранения жизней. Уступайте дорогу и будьте осторожными, когда видите транспортное средство с включенными специальными сигналами на дороге."]]}},"roadSigns":{"priority":{"title":"Знаки приоритета","subtitle":["1. Знак \\"Уступите дорогу\\"","2. Знак \\"Главная дорога\\"","3. Знак \\"Пешеходный переход\\"","4. Знак \\"Велосипедисты\\"","5. Знак \\"Железнодорожный переезд\\"","6. Знак \\"Однопроходная дорога\\"","7. Знак \\"Конец полосы\\"","8. Знак \\"Пересечение с трамвайными путями\\"","9. Знак \\"Преимущество встречного движения\\"","10. Знак \\"Двустороннее движение\\""],"img":["./img/theory/roadSigns/1/1.jpg","./img/theory/roadSigns/1/2.jpg","./img/theory/roadSigns/1/3.jpg","./img/theory/roadSigns/1/4.jpg","./img/theory/roadSigns/1/5.jpg","./img/theory/roadSigns/1/6.jpg","./img/theory/roadSigns/1/7.jpg","./img/theory/roadSigns/1/8.jpg","./img/theory/roadSigns/1/9.jpg","./img/theory/roadSigns/1/10.jpg"],"text":[["Знак \\"Уступите дорогу\\" указывает, что вы должны уступить дорогу другим участникам движения."],["Знак \\"Главная дорога\\" показывает, что вы находитесь на главной дороге и имеете приоритет перед въезжающими с боковых дорог."],["Знак \\"Пешеходный переход\\" указывает на место, где пешеходы имеют приоритет при пересечении дороги."],["Знак \\"Велосипедисты\\" предупреждает о наличии велосипедной дорожки и обязывает уступить дорогу велосипедистам."],["Знак \\"Железнодорожный переезд\\" указывает на приближение к железнодорожным путям и обязывает уступить дорогу поездам."],["Знак \\"Однопроходная дорога\\" указывает, что дорога однопроходная, и вы должны уступить дорогу встречным транспортным средствам."],["Знак \\"Конец полосы\\" указывает на конец участка средней полосы и переход во владение встречного направления."],["Знак \\"Пересечение с трамвайными путями\\" предупреждает о наличии трамвайных путей и обязывает уступить дорогу трамваям."],["Знак \\"Преимущество встречного движения\\" указывает на приоритет движения водителей по встречной полосе и обязывает уступить дорогу встречному движению."],["Знак \\"Двустороннее движение\\" показывает, что дорога двусторонняя и участники движения могут двигаться в обоих направлениях."]]},"forbidding":{"title":"Запрещающие знаки","subtitle":["1. Сосредоточенность и Безотвлекаемость","2. Скоростной Режим","3. Передача Приоритета","4. Наличие документов","5. Уступать Пешеходам"],"img":["./img/theory/roadSigns/2/1.jpg","./img/theory/roadSigns/2/2.jpg","./img/theory/roadSigns/2/3.jpg","./img/theory/roadSigns/2/4.jpg","./img/theory/roadSigns/2/5.jpg","./img/theory/roadSigns/2/6.jpg","./img/theory/roadSigns/2/7.jpg","./img/theory/roadSigns/2/8.jpg","./img/theory/roadSigns/2/9.jpg","./img/theory/roadSigns/2/10.jpg"],"text":[["Внимание на дороге - главное правило. Избегайте отвлекающих действий, таких как разговоры по телефону."],["Уважайте ограничения скорости. Не превышайте их, чтобы обеспечить безопасность всех на дороге."],["Правильно уступайте дорогу согласно правилам. Помните о приоритетах."],["Водитель транспортного средства обязан иметь при себе удостоверение и по требованию сотрудников полиции передавать им, для проверки."],["Пешеходы всегда имеют преимущество на пешеходных переходах. Уступайте дорогу им."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"prescriptive":{"title":"Предписывающие знаки","subtitle":["1. Знак \\"Двигаться прямо\\"","2. Знак \\"Поворот направо\\"","3. Знак \\"Поворот налево\\"","4. Знак \\"Двигаться в обратном направлении\\"","5. Знак \\"Объезд препятствия справа\\""],"img":["./img/theory/roadSigns/3/1.jpg","./img/theory/roadSigns/3/2.jpg","./img/theory/roadSigns/3/3.jpg","./img/theory/roadSigns/3/4.jpg","./img/theory/roadSigns/3/5.jpg","./img/theory/roadSigns/3/6.jpg"],"text":[["Знак с изображением стрелки, указывающей вперед, предписывает двигаться прямо, не поворачивая."],["Знак с изображением стрелки, указывающей направо, предписывает совершить правый поворот."],["Знак с изображением стрелки, указывающей налево, предписывает совершить левый поворот."],["Знак с изображением двух стрелок, указывающих в разные стороны, предписывает двигаться в обратном направлении."],["Знак указывает, что объезд различного рода препятствий на проезжей части разрешается со стороны, указанной стрелкой."],["Знак указывает, что движение организовано по кругу в направлении стрелок."]]}}}');
     class MousePRLX {
         constructor(props, data = null) {
@@ -155,92 +339,6 @@
             }));
         }
     }), 0);
-    class Car {
-        constructor(intersectionCenter, path, x, y, deg) {
-            this.path = path;
-            this.carHtml = document.createElement("div");
-            this.carImg = document.createElement("img");
-            this.count = document.createElement("span");
-            this.carImg.src = this.path;
-            this.carHtml.appendChild(this.carImg);
-            this.carHtml.appendChild(this.count);
-            this.count.classList.add("count");
-            this.carHtml.classList.add("car");
-            this.carHtml.style.left = x + "px";
-            this.carHtml.style.top = y + "px";
-            this.carImg.style.rotate = deg + "deg";
-            document.querySelector(".intersection").appendChild(this.carHtml);
-            this.intersectionCenter = window.getComputedStyle(intersectionCenter);
-            this.left = this.intersectionCenter.getPropertyValue("left");
-            this.top = this.intersectionCenter.getPropertyValue("top");
-            this.clickCarHtml();
-        }
-        move() {
-            let style = window.getComputedStyle(this.carHtml);
-            let carHtmlX = style.getPropertyValue("left");
-            let carHtmlY = style.getPropertyValue("top");
-            if (carHtmlX <= this.left) {
-                console.log(this.left);
-                let intersectionCenterX = this.left.substring(0, this.left.length - 2);
-                this.top.substring(0, this.top.length - 2);
-                carHtmlX = carHtmlX.substring(0, carHtmlX.length - 2);
-                carHtmlY = carHtmlY.substring(0, carHtmlY.length - 2);
-                let delayedLoop = () => {
-                    setTimeout((() => {
-                        carHtmlX++;
-                        this.carHtml.style.left = carHtmlX + "px";
-                        if (carHtmlX < intersectionCenterX) delayedLoop(); else {
-                            const rotationAngle = -90;
-                            const duration = 1e3;
-                            this.smoothRotate(this.carHtml, rotationAngle, duration);
-                            setTimeout((() => {
-                                delayedLoopY();
-                            }), 1e3);
-                        }
-                    }), 2);
-                };
-                delayedLoop();
-                let delayedLoopY = () => {
-                    setTimeout((() => {
-                        carHtmlY--;
-                        this.carHtml.style.top = carHtmlY + "px";
-                        if (carHtmlY > -200) delayedLoopY();
-                    }), 2);
-                };
-            }
-            return;
-        }
-        smoothRotate(element, rotationAngle, duration) {
-            let startAngle = 0;
-            let startTime = null;
-            function animateRotate(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const progress = timestamp - startTime;
-                const currentAngle = easeInOutCubic(progress, startAngle, rotationAngle, duration);
-                element.style.transform = `rotate(${currentAngle}deg)`;
-                if (progress < duration) requestAnimationFrame(animateRotate);
-            }
-            requestAnimationFrame(animateRotate);
-            function easeInOutCubic(t, b, c, d) {
-                t /= d / 2;
-                if (t < 1) return c / 2 * t * t * t + b;
-                t -= 2;
-                return c / 2 * (t * t * t + 2) + b;
-            }
-        }
-        clickCarHtml() {
-            this.carHtml.addEventListener("click", (() => {
-                for (let index = 0; index < window.cars.length; index++) {
-                    const element = window.cars[index];
-                    if (element == this) return;
-                }
-                window.cars.push(this);
-                this.carHtml.querySelector(".count").innerHTML = window.cars.length;
-                if (window.cars.length == 3) window.start();
-            }));
-        }
-    }
-    const js_Car = Car;
     window["FLS"] = true;
     isWebp();
     document.addEventListener("DOMContentLoaded", (() => {
@@ -417,9 +515,9 @@
         let intersectionCenter = document.createElement("div");
         intersectionCenter.classList.add("intersectionCenter");
         document.querySelector(".intersection").appendChild(intersectionCenter);
-        new js_Car(intersectionCenter, "./img/tests/cars/y-car.png", 100, 200, 90);
-        new js_Car(intersectionCenter, "./img/tests/cars/y-car.png", 400, 200, 90);
-        new js_Car(intersectionCenter, "./img/tests/cars/y-car.png", 500, 500);
+        new js_Car("left", intersectionCenter, "./img/tests/cars/y-car.png", 100, 340, 90);
+        new js_Car("default", intersectionCenter, "./img/tests/cars/y-car.png", 400, 340, 90);
+        new js_Car("right", intersectionCenter, "./img/tests/cars/y-car.png", 650, 500, 0);
     };
     window.start = () => {
         for (let index = 0; index < window.cars.length; index++) setTimeout((() => {

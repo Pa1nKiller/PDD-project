@@ -1012,6 +1012,13 @@ h6 {
   overflow: hidden;
 }
 
+.centerPoint {
+  position: absolute;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  background-color: #fff;
+}
+
 .car {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
