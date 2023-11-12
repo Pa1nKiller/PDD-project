@@ -1006,9 +1006,8 @@ h6 {
 .intersection {
   position: relative;
   margin: 0 auto;
-  width: 81.25rem;
-  height: 41.875rem;
-  background: url("../img/tests/intersections/1.jpg");
+  width: 78.1875rem;
+  height: 48.0625rem;
   overflow: hidden;
 }
 
@@ -1064,13 +1063,130 @@ h6 {
 }
 
 .intersectionCenter {
-  width: 22.0625rem;
-  height: 18rem;
   background-color: #fff;
   opacity: 0.2;
   position: absolute;
-  left: 458px;
-  top: 220px;
+}
+
+.povorotniks-tleft {
+  position: absolute !important;
+  z-index: 1;
+  animation: animation-name 0.8s infinite ease-in-out;
+  display: inline !important;
+  left: 0;
+  top: 0;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+
+.povorotniks-tright {
+  position: absolute !important;
+  z-index: 1;
+  animation: animation-name 0.8s infinite ease-in-out;
+  display: inline !important;
+  right: 0;
+  top: 0;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+
+.povorotniks-bleft {
+  position: absolute !important;
+  z-index: 1;
+  animation: animation-name 0.8s infinite ease-in-out;
+  display: inline !important;
+  left: 0;
+  bottom: 0;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+
+.povorotniks-bright {
+  position: absolute !important;
+  z-index: 1;
+  animation: animation-name 0.8s infinite ease-in-out;
+  display: inline !important;
+  right: 0;
+  bottom: 0;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+
+.povorotnik {
+  position: absolute !important;
+  display: none;
+  z-index: 1;
+  animation: animation-name 0.8s infinite ease-in-out;
+}
+.povorotnik.left {
+  display: inline !important;
+  left: 0;
+  top: 0;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+.povorotnik.right {
+  display: inline !important;
+  right: 0;
+  top: 0;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+
+.dublpovorotnik {
+  position: absolute !important;
+  display: none;
+  z-index: 1;
+  animation: animation-name 0.8s infinite ease-in-out;
+}
+.dublpovorotnik.left {
+  left: 0;
+  bottom: 0;
+}
+.dublpovorotnik.right {
+  right: 0;
+  bottom: 0;
+}
+.dublpovorotnik.left, .dublpovorotnik.right {
+  display: inline !important;
+  background-image: url("./img/tests/cars/povorot.png");
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+
+@keyframes animation-name {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+.next {
+  padding: 0.625rem 1.25rem;
+  color: #000;
+  font-size: 1.5rem;
+  text-align: center;
+  border: 0.125rem solid #00adb4;
+  border-radius: 0.3125rem;
+  transition: all 0.2s ease-in-out;
+}
+.next:hover {
+  background-color: #01979c;
+}
+.next:disabled {
+  pointer-events: none;
+  background-color: #9c9c9c;
+  border: 0.125rem solid #000;
 }
 
 .sidebar {

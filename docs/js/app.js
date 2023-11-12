@@ -91,14 +91,29 @@
     }
     const js_adittional = Adittional;
     class Car {
-        constructor(direction = "default", intersectionCenter, path, x, y, deg) {
+        constructor(direction = "default", intersectionCenter, path, x, y, deg, id, povorot) {
             this.path = path;
             this.carHtml = document.createElement("div");
             this.carImg = document.createElement("img");
             this.count = document.createElement("span");
             this.deg = deg;
+            this.id = id;
             this.direction = direction;
+            this.povorot = povorot;
+            this.povorotnik = document.createElement("div");
+            this.povorotnik.classList.add("povorotnik");
+            this.dublpovorotnik = document.createElement("div");
+            this.dublpovorotnik.classList.add("dublpovorotnik");
+            if (this.povorot == "right") {
+                this.povorotnik.classList.add("right");
+                this.dublpovorotnik.classList.add("right");
+            } else if (this.povorot == "left") {
+                this.dublpovorotnik.classList.add("left");
+                this.povorotnik.classList.add("left");
+            }
             this.carImg.src = this.path;
+            this.carHtml.appendChild(this.povorotnik);
+            this.carHtml.appendChild(this.dublpovorotnik);
             this.carHtml.appendChild(this.carImg);
             this.carHtml.appendChild(this.count);
             this.count.classList.add("count");
@@ -149,6 +164,27 @@
                 if (!startTime) startTime = timestamp;
                 const progress = timestamp - startTime;
                 const currentAngle = easeInOutCubic(progress, startAngle, rotationAngle, duration);
+                if (this.direction == "stop") {
+                    if (this.isCrash()) {
+                        this.povorotnik.remove("right");
+                        this.dublpovorotnik.remove("right");
+                        this.povorotnik.remove("left");
+                        this.dublpovorotnik.remove("left");
+                        let tl = document.createElement("div");
+                        tl.classList.add("povorotniks-tleft");
+                        let tr = document.createElement("div");
+                        tr.classList.add("povorotniks-tright");
+                        let bl = document.createElement("div");
+                        bl.classList.add("povorotniks-bleft");
+                        let br = document.createElement("div");
+                        br.classList.add("povorotniks-bright");
+                        this.carHtml.appendChild(tl);
+                        this.carHtml.appendChild(tr);
+                        this.carHtml.appendChild(bl);
+                        this.carHtml.appendChild(br);
+                    }
+                    return;
+                }
                 if (currentAngle + 1 > startAngle + rotationAngle && currentAngle - 1 < startAngle + rotationAngle) {
                     this.direction = "default";
                     this.deg = currentAngle;
@@ -173,8 +209,10 @@
                     if (element == this) return;
                 }
                 window.cars.push(this);
+                window.answer += this.id;
+                console.log(window.answer);
                 this.carHtml.querySelector(".count").innerHTML = window.cars.length;
-                if (window.cars.length == 4) window.start();
+                if (window.cars.length == 3) window.start();
             }));
         }
         moveDeg() {
@@ -194,7 +232,10 @@
                     const rect2 = element.border.getBoundingClientRect();
                     if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) return true; else return false;
                 };
-                if (isOverlap()) window.end();
+                if (isOverlap()) {
+                    window.end();
+                    return true;
+                }
             }
         }
         stop() {
@@ -206,16 +247,34 @@
                     setTimeout((() => {
                         this.carX++;
                         this.carHtml.style.left = this.carX + "px";
-                        if (this.carX < this.intersectionWidth) delayedLoop();
+                        if (this.carX < this.intersectionWidth && this.direction != "stop") delayedLoop(); else if (this.isCrash()) {
+                            this.povorotnik.remove("right");
+                            this.dublpovorotnik.remove("right");
+                            this.povorotnik.remove("left");
+                            this.dublpovorotnik.remove("left");
+                            let tl = document.createElement("div");
+                            tl.classList.add("povorotniks-tleft");
+                            let tr = document.createElement("div");
+                            tr.classList.add("povorotniks-tright");
+                            let bl = document.createElement("div");
+                            bl.classList.add("povorotniks-bleft");
+                            let br = document.createElement("div");
+                            br.classList.add("povorotniks-bright");
+                            this.carHtml.appendChild(tl);
+                            this.carHtml.appendChild(tr);
+                            this.carHtml.appendChild(bl);
+                            this.carHtml.appendChild(br);
+                        }
+                        if (this.carX >= this.intersectionWidth) this.carHtml.style.display = "none";
                     }), 2);
                 };
                 delayedLoop();
-            } else if (this.direction == "stop") return; else {
+            } else {
                 let delayedLoop = () => {
                     setTimeout((() => {
                         this.carX++;
                         this.carHtml.style.left = this.carX + "px";
-                        if (this.direction == "left") if (this.carX - 20 < this.centerPointX) delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carX + 160 < this.centerPointX) delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
+                        if (this.direction == "left") if (this.carX - 20 < this.centerPointX && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carX + 96 < this.centerPointX && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
                     }), 2);
                 };
                 delayedLoop();
@@ -227,16 +286,34 @@
                     setTimeout((() => {
                         this.carY++;
                         this.carHtml.style.top = this.carY + "px";
-                        if (this.carY < this.intersectionHeight) delayedLoop();
+                        if (this.carY < this.intersectionHeight && this.direction != "stop") delayedLoop(); else if (this.isCrash()) {
+                            this.povorotnik.remove("right");
+                            this.dublpovorotnik.remove("right");
+                            this.povorotnik.remove("left");
+                            this.dublpovorotnik.remove("left");
+                            let tl = document.createElement("div");
+                            tl.classList.add("povorotniks-tleft");
+                            let tr = document.createElement("div");
+                            tr.classList.add("povorotniks-tright");
+                            let bl = document.createElement("div");
+                            bl.classList.add("povorotniks-bleft");
+                            let br = document.createElement("div");
+                            br.classList.add("povorotniks-bright");
+                            this.carHtml.appendChild(tl);
+                            this.carHtml.appendChild(tr);
+                            this.carHtml.appendChild(bl);
+                            this.carHtml.appendChild(br);
+                        }
+                        if (this.carY >= this.intersectionHeight) this.carHtml.style.display = "none";
                     }), 2);
                 };
                 delayedLoop();
-            } else if (this.direction == "stop") return; else {
+            } else {
                 let delayedLoop = () => {
                     setTimeout((() => {
                         this.carY++;
                         this.carHtml.style.top = this.carY + "px";
-                        if (this.direction == "left") if (this.carY + 20 < this.centerPointY) delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carY + 170 < this.centerPointY) delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
+                        if (this.direction == "left") if (this.carY + 20 < this.centerPointY && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carY + 125 < this.centerPointY && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
                     }), 2);
                 };
                 delayedLoop();
@@ -248,16 +325,34 @@
                     setTimeout((() => {
                         this.carX--;
                         this.carHtml.style.left = this.carX + "px";
-                        if (this.carX > -220) delayedLoop();
+                        if (this.carX > -220 && this.direction != "stop") delayedLoop(); else if (this.isCrash()) {
+                            this.povorotnik.remove("right");
+                            this.dublpovorotnik.remove("right");
+                            this.povorotnik.remove("left");
+                            this.dublpovorotnik.remove("left");
+                            let tl = document.createElement("div");
+                            tl.classList.add("povorotniks-tleft");
+                            let tr = document.createElement("div");
+                            tr.classList.add("povorotniks-tright");
+                            let bl = document.createElement("div");
+                            bl.classList.add("povorotniks-bleft");
+                            let br = document.createElement("div");
+                            br.classList.add("povorotniks-bright");
+                            this.carHtml.appendChild(tl);
+                            this.carHtml.appendChild(tr);
+                            this.carHtml.appendChild(bl);
+                            this.carHtml.appendChild(br);
+                        }
+                        if (this.carX <= -220) this.carHtml.style.display = "none";
                     }), 2);
                 };
                 delayedLoop();
-            } else if (this.direction == "stop") return; else {
+            } else {
                 let delayedLoop = () => {
                     setTimeout((() => {
                         this.carX--;
                         this.carHtml.style.left = this.carX + "px";
-                        if (this.direction == "left") if (this.carX + 160 > this.centerPointX) delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carX - 30 > this.centerPointX) delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
+                        if (this.direction == "left") if (this.carX + 96 > this.centerPointX && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carX - 30 > this.centerPointX && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
                     }), 2);
                 };
                 delayedLoop();
@@ -269,16 +364,34 @@
                     setTimeout((() => {
                         this.carY--;
                         this.carHtml.style.top = this.carY + "px";
-                        if (this.carY > -220) delayedLoop(); else return;
+                        if (this.carY > -220 && this.direction != "stop") delayedLoop(); else if (this.isCrash()) {
+                            this.povorotnik.remove("right");
+                            this.dublpovorotnik.remove("right");
+                            this.povorotnik.remove("left");
+                            this.dublpovorotnik.remove("left");
+                            let tl = document.createElement("div");
+                            tl.classList.add("povorotniks-tleft");
+                            let tr = document.createElement("div");
+                            tr.classList.add("povorotniks-tright");
+                            let bl = document.createElement("div");
+                            bl.classList.add("povorotniks-bleft");
+                            let br = document.createElement("div");
+                            br.classList.add("povorotniks-bright");
+                            this.carHtml.appendChild(tl);
+                            this.carHtml.appendChild(tr);
+                            this.carHtml.appendChild(bl);
+                            this.carHtml.appendChild(br);
+                        }
+                        if (this.carY <= -220) this.carHtml.style.display = "none";
                     }), 2);
                 };
                 delayedLoop();
-            } else if (this.direction == "stop") return; else {
+            } else {
                 let delayedLoop = () => {
                     setTimeout((() => {
                         this.carY--;
                         this.carHtml.style.top = this.carY + "px";
-                        if (this.direction == "left") if (this.carY + 160 > this.centerPointY) delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carY + 20 > this.centerPointY) delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
+                        if (this.direction == "left") if (this.carY + 125 > this.centerPointY && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, -90, 1e3); else if (this.carY + 20 > this.centerPointY && this.direction != "stop") delayedLoop(); else this.smoothRotate(this.carHtml, 90, 1e3);
                     }), 2);
                 };
                 delayedLoop();
@@ -287,6 +400,7 @@
     }
     const _ar = Car;
     const adittionalDB_namespaceObject = JSON.parse('{"generalProvisions":{"general":{"title":"Общие положения","subtitle":["1. Дорога и Пешеходы","2. Правило правой руки","3. Светофоры и Знаки","4. Скорость и Дистанция","5. Алкоголь и Наркотики","6. Сотовые телефоны","7. Другие Участники Движения"],"img":["./img/theory/generalProvisions/1/1.jpg","./img/theory/generalProvisions/1/2.jpg","./img/theory/generalProvisions/1/3.jpg","./img/theory/generalProvisions/1/4.jpg","./img/theory/generalProvisions/1/5.jpg","./img/theory/generalProvisions/1/6.jpg","./img/theory/generalProvisions/1/7.jpg"],"text":[["Дорога - это не просто полоса асфальта. Это место, где каждый участник движения должен соблюдать правила и уважать друг друга.","Пешеходы - наши самые уязвимые участники. Помни, что они всегда имеют преимущество на пешеходных переходах."],["В большинстве стран движение на дороге праворульное. Это означает, что при пересечении других транспортных средств, уступай дорогу тем, кто едет справа."],["Подчиняйтесь светофорам и дорожным знакам. Они указывают, когда можно двигаться и когда нужно остановиться."],["Соблюдай разумную скорость и безопасное расстояние между автомобилями. Это позволяет избежать аварий."],["Никогда не управляй транспортным средством, находясь под воздействием алкоголя или наркотиков. Это опасно и незаконно."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"generalTwo":{"title":"Общие обязанности водителей","subtitle":["1. Сосредоточенность и Безотвлекаемость","2. Скоростной Режим","3. Передача Приоритета","4. Наличие документов","5. Уступать Пешеходам"],"img":["./img/theory/generalProvisions/2/1.jpg",null,"./img/theory/generalProvisions/2/2.jpg","./img/theory/generalProvisions/2/3.jpg","./img/theory/generalProvisions/2/4.jpg"],"text":[["Внимание на дороге - главное правило. Избегайте отвлекающих действий, таких как разговоры по телефону."],["Уважайте ограничения скорости. Не превышайте их, чтобы обеспечить безопасность всех на дороге."],["Правильно уступайте дорогу согласно правилам. Помните о приоритетах."],["Водитель транспортного средства обязан иметь при себе удостоверение и по требованию сотрудников полиции передавать им, для проверки."],["Пешеходы всегда имеют преимущество на пешеходных переходах. Уступайте дорогу им."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"generalThree":{"title":"Применение специальных сигналов","subtitle":["1. Специальные сигналы","2. Сирена и Мигающие Маячки","3. Уступите Дорогу","4. Будьте Осторожны"],"img":["./img/theory/generalProvisions/3/1.jpg","./img/theory/generalProvisions/3/2.jpg","./img/theory/generalProvisions/3/3.jpg","./img/theory/generalProvisions/3/4.jpg"],"text":[["Специальные сигналы - это средство, которое используется служебными и аварийными транспортными средствами для обозначения их приоритета на дороге."],["Специальные сигналы обычно включают сирену и мигающие маячки. Это предупреждает других участников движения о неотложности их задачи."],["Когда вы видите служебное аварийное транспортное средство с включенными специальными сигналами, вы должны уступить дорогу и пропустить его."],["Водители должны быть особенно осторожными, когда видят транспортное средство с включенными специальными сигналами. Это может быть связано с неотложной медицинской помощью, пожаром или другой аварией. Важно помнить, что специальные сигналы используются для обеспечения безопасности и сохранения жизней. Уступайте дорогу и будьте осторожными, когда видите транспортное средство с включенными специальными сигналами на дороге."]]}},"roadSigns":{"priority":{"title":"Знаки приоритета","subtitle":["1. Знак \\"Уступите дорогу\\"","2. Знак \\"Главная дорога\\"","3. Знак \\"Пешеходный переход\\"","4. Знак \\"Велосипедисты\\"","5. Знак \\"Железнодорожный переезд\\"","6. Знак \\"Однопроходная дорога\\"","7. Знак \\"Конец полосы\\"","8. Знак \\"Пересечение с трамвайными путями\\"","9. Знак \\"Преимущество встречного движения\\"","10. Знак \\"Двустороннее движение\\""],"img":["./img/theory/roadSigns/1/1.jpg","./img/theory/roadSigns/1/2.jpg","./img/theory/roadSigns/1/3.jpg","./img/theory/roadSigns/1/4.jpg","./img/theory/roadSigns/1/5.jpg","./img/theory/roadSigns/1/6.jpg","./img/theory/roadSigns/1/7.jpg","./img/theory/roadSigns/1/8.jpg","./img/theory/roadSigns/1/9.jpg","./img/theory/roadSigns/1/10.jpg"],"text":[["Знак \\"Уступите дорогу\\" указывает, что вы должны уступить дорогу другим участникам движения."],["Знак \\"Главная дорога\\" показывает, что вы находитесь на главной дороге и имеете приоритет перед въезжающими с боковых дорог."],["Знак \\"Пешеходный переход\\" указывает на место, где пешеходы имеют приоритет при пересечении дороги."],["Знак \\"Велосипедисты\\" предупреждает о наличии велосипедной дорожки и обязывает уступить дорогу велосипедистам."],["Знак \\"Железнодорожный переезд\\" указывает на приближение к железнодорожным путям и обязывает уступить дорогу поездам."],["Знак \\"Однопроходная дорога\\" указывает, что дорога однопроходная, и вы должны уступить дорогу встречным транспортным средствам."],["Знак \\"Конец полосы\\" указывает на конец участка средней полосы и переход во владение встречного направления."],["Знак \\"Пересечение с трамвайными путями\\" предупреждает о наличии трамвайных путей и обязывает уступить дорогу трамваям."],["Знак \\"Преимущество встречного движения\\" указывает на приоритет движения водителей по встречной полосе и обязывает уступить дорогу встречному движению."],["Знак \\"Двустороннее движение\\" показывает, что дорога двусторонняя и участники движения могут двигаться в обоих направлениях."]]},"forbidding":{"title":"Запрещающие знаки","subtitle":["1. Сосредоточенность и Безотвлекаемость","2. Скоростной Режим","3. Передача Приоритета","4. Наличие документов","5. Уступать Пешеходам"],"img":["./img/theory/roadSigns/2/1.jpg","./img/theory/roadSigns/2/2.jpg","./img/theory/roadSigns/2/3.jpg","./img/theory/roadSigns/2/4.jpg","./img/theory/roadSigns/2/5.jpg","./img/theory/roadSigns/2/6.jpg","./img/theory/roadSigns/2/7.jpg","./img/theory/roadSigns/2/8.jpg","./img/theory/roadSigns/2/9.jpg","./img/theory/roadSigns/2/10.jpg"],"text":[["Внимание на дороге - главное правило. Избегайте отвлекающих действий, таких как разговоры по телефону."],["Уважайте ограничения скорости. Не превышайте их, чтобы обеспечить безопасность всех на дороге."],["Правильно уступайте дорогу согласно правилам. Помните о приоритетах."],["Водитель транспортного средства обязан иметь при себе удостоверение и по требованию сотрудников полиции передавать им, для проверки."],["Пешеходы всегда имеют преимущество на пешеходных переходах. Уступайте дорогу им."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"prescriptive":{"title":"Предписывающие знаки","subtitle":["1. Знак \\"Двигаться прямо\\"","2. Знак \\"Поворот направо\\"","3. Знак \\"Поворот налево\\"","4. Знак \\"Двигаться в обратном направлении\\"","5. Знак \\"Объезд препятствия справа\\""],"img":["./img/theory/roadSigns/3/1.jpg","./img/theory/roadSigns/3/2.jpg","./img/theory/roadSigns/3/3.jpg","./img/theory/roadSigns/3/4.jpg","./img/theory/roadSigns/3/5.jpg","./img/theory/roadSigns/3/6.jpg"],"text":[["Знак с изображением стрелки, указывающей вперед, предписывает двигаться прямо, не поворачивая."],["Знак с изображением стрелки, указывающей направо, предписывает совершить правый поворот."],["Знак с изображением стрелки, указывающей налево, предписывает совершить левый поворот."],["Знак с изображением двух стрелок, указывающих в разные стороны, предписывает двигаться в обратном направлении."],["Знак указывает, что объезд различного рода препятствий на проезжей части разрешается со стороны, указанной стрелкой."],["Знак указывает, что движение организовано по кругу в направлении стрелок."]]}}}');
+    const cross_namespaceObject = JSON.parse('{"1":{"width":"320px","height":"215px","left":"470px","top":"90px","path":"./img/tests/intersections/cross1.jpg","car":[{"id":2,"direction":"right","path":"./img/tests/cars/b-car.png","x":60,"y":180,"deg":90,"povorot":"right"},{"id":1,"direction":"right","path":"./img/tests/cars/w-car.png","x":280,"y":180,"deg":90,"povorot":"right"},{"id":3,"direction":"right","path":"./img/tests/cars/y-car.png","x":650,"y":360,"deg":0,"povorot":"right"}],"answers":[{"sequence":"123"}]},"2":{"width":"320px","height":"215px","left":"470px","top":"283px","path":"./img/tests/intersections/cross2.jpg","car":[{"id":1,"direction":"default","path":"./img/tests/cars/y-car.png","x":340,"y":375,"deg":90,"povorot":"none"},{"id":2,"direction":"right","path":"./img/tests/cars/w-car.png","x":540,"y":110,"deg":180,"povorot":"right"},{"id":3,"direction":"left","path":"./img/tests/cars/b-car.png","x":650,"y":535,"deg":0,"povorot":"left"}],"answers":[{"sequence":"231"}]}}');
     class MousePRLX {
         constructor(props, data = null) {
             let defaultConfig = {
@@ -522,34 +636,54 @@
             closeAll();
         }));
     };
+    let inx = 1;
     window.createTestWindow = () => {
         window.cars = [];
         let intersectionCenter = document.createElement("div");
         intersectionCenter.classList.add("intersectionCenter");
+        console.log(inx);
+        intersectionCenter.style.cssText = `\n        width: ${cross_namespaceObject[inx].width};\n        height: ${cross_namespaceObject[inx].height};\n        top: ${cross_namespaceObject[inx].top};\n        left: ${cross_namespaceObject[inx].left};\n    `;
+        window.answer = "";
+        document.querySelector(".intersection").replaceChildren();
         document.querySelector(".intersection").appendChild(intersectionCenter);
-        new _ar("default", intersectionCenter, "./img/tests/cars/y-car.png", 300, 340, 90);
-        new _ar("left", intersectionCenter, "./img/tests/cars/y-car.png", 650, 500, 0);
-        new _ar("left", intersectionCenter, "./img/tests/cars/y-car.png", 480, 0, 180);
-        new _ar("default", intersectionCenter, "./img/tests/cars/y-car.png", 900, 190, -90);
+        document.querySelector(".intersection").style.background = "url(" + cross_namespaceObject[inx].path + ")";
+        for (let index = 0; index < cross_namespaceObject[inx].car.length; index++) {
+            const car = cross_namespaceObject[inx].car[index];
+            new _ar(car.direction, intersectionCenter, car.path, car.x, car.y, car.deg, car.id, car.povorot);
+        }
+        let nextbtn = document.querySelector(".next");
+        nextbtn.addEventListener("click", (() => {
+            inx++;
+            window.createTestWindow();
+        }));
     };
-    window.interval = null;
     window.start = () => {
+        let answer = false;
+        for (let index = 0; index < cross_namespaceObject[inx].answers.length; index++) {
+            const sequence = cross_namespaceObject[inx].answers[index].sequence;
+            if (window.answer == sequence) {
+                answer = true;
+                break;
+            }
+        }
+        let inter = answer ? 3e3 : 200;
         for (let index = 0; index < window.cars.length; index++) window.interval = setTimeout((() => {
             const element = window.cars[index];
             element.move();
-            element.intervalId = setInterval((() => {
+            window.isin = setInterval((() => {
                 element.isCrash();
             }), 100);
-        }), 400 * index);
+        }), inter * index);
     };
     window.end = () => {
+        clearInterval(window.interval);
+        clearInterval(window.isin);
         for (let index = 0; index < window.cars.length; index++) {
             const element = window.cars[index];
             element.stop();
-            clearInterval(element.intervalId);
         }
-        clearTimeout(window.interval);
-        window.cars.length = 0;
+        clearInterval(window.isin);
+        clearInterval(window.interval);
     };
     menuInit();
 })();
