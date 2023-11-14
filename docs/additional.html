@@ -6,13 +6,19 @@
 	<meta charset="UTF-8">
 	<meta name="format-detection" content="telephone=no">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20231112144318">
+	<link rel="stylesheet" href="css/style.min.css?_v=20231114111639">
 	<link rel="shortcut icon" href="img/favicon.png">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
+	<div class="preloader">
+		<div class="preloader__row">
+			<div class="preloader__item"></div>
+			<div class="preloader__item"></div>
+		</div>
+	</div>
 	<div class="wrapper">
 		<header class="header-main">
 			<img class="header-main__firstImg" src='img/additional/book-left.png' img>
@@ -105,7 +111,16 @@
 </div>
  -->
 
-	<script src="js/app.min.js?_v=20231112144318"></script>
+	<script src="js/app.min.js?_v=20231114111639"></script>
+	<script>
+		window.onload = function() {
+			document.body.classList.add('loaded_hiding');
+			window.setTimeout(function() {
+				document.body.classList.add('loaded');
+				document.body.classList.remove('loaded_hiding');
+			}, 400);
+		}
+	</script>
 </body>
 
 </html>
