@@ -1015,6 +1015,7 @@ h6 {
   position: absolute;
   left: 50%;
   top: 50%;
+  width: 98%;
   height: 98%;
   transform: translate(-50%, -50%);
 }
@@ -1023,7 +1024,7 @@ h6 {
   position: absolute;
   width: 0.3125rem;
   height: 0.3125rem;
-  background-color: #fff;
+  background-color: transparent;
 }
 
 .car {
@@ -1062,7 +1063,7 @@ h6 {
 }
 
 .intersectionCenter {
-  background-color: #fff;
+  background-color: transparent;
   opacity: 0.2;
   position: absolute;
 }

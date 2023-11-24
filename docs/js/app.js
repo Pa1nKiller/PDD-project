@@ -237,9 +237,9 @@
                 const element = window.cars[index];
                 if (element == this) continue;
                 let isOverlap = () => {
-                    const rect1 = this.border.getBoundingClientRect();
-                    const rect2 = element.border.getBoundingClientRect();
-                    if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) return true; else if (rect1.top < rect2.bottom && rect1.bottom > rect2.top) return true; else return false;
+                    const car = this.border.getBoundingClientRect();
+                    const carTwo = element.border.getBoundingClientRect();
+                    if (car.left + car.width > carTwo.left && car.left < carTwo.left + carTwo.width && car.top + car.height > carTwo.top && car.top < carTwo.top + carTwo.height) return true; else return false;
                 };
                 if (isOverlap()) {
                     window.end();
