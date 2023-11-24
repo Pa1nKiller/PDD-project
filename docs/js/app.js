@@ -91,11 +91,12 @@
     }
     const js_adittional = Adittional;
     class Car {
-        constructor(direction = "default", intersectionCenter, path, x, y, deg, id, povorot) {
+        constructor(direction = "default", intersectionCenter, path, x, y, deg, id, povorot, all) {
             this.path = path;
             this.carHtml = document.createElement("div");
             this.carImg = document.createElement("img");
             this.count = document.createElement("span");
+            this.all = all;
             this.deg = deg;
             this.id = id;
             this.direction = direction;
@@ -188,6 +189,13 @@
                 if (currentAngle + 1 > startAngle + rotationAngle && currentAngle - 1 < startAngle + rotationAngle) {
                     this.direction = "default";
                     this.deg = currentAngle;
+                    if (this.povorot == "right") {
+                        this.povorotnik.classList.remove("right");
+                        this.dublpovorotnik.classList.remove("right");
+                    } else if (this.povorot == "left") {
+                        this.dublpovorotnik.classList.remove("left");
+                        this.povorotnik.classList.remove("left");
+                    }
                     this.moveDeg();
                     return;
                 }
@@ -212,7 +220,8 @@
                 window.answer += this.id;
                 console.log(window.answer);
                 this.carHtml.querySelector(".count").innerHTML = window.cars.length;
-                if (window.cars.length == 3) window.start();
+                console.log(this.all);
+                if (window.cars.length == this.all) window.start();
             }));
         }
         moveDeg() {
@@ -230,7 +239,7 @@
                 let isOverlap = () => {
                     const rect1 = this.border.getBoundingClientRect();
                     const rect2 = element.border.getBoundingClientRect();
-                    if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) return true; else return false;
+                    if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) return true; else if (rect1.top < rect2.bottom && rect1.bottom > rect2.top) return true; else return false;
                 };
                 if (isOverlap()) {
                     window.end();
@@ -400,7 +409,7 @@
     }
     const _ar = Car;
     const adittionalDB_namespaceObject = JSON.parse('{"generalProvisions":{"general":{"title":"Общие положения","subtitle":["1. Дорога и Пешеходы","2. Правило правой руки","3. Светофоры и Знаки","4. Скорость и Дистанция","5. Алкоголь и Наркотики","6. Сотовые телефоны","7. Другие Участники Движения"],"img":["./img/theory/generalProvisions/1/1.jpg","./img/theory/generalProvisions/1/2.jpg","./img/theory/generalProvisions/1/3.jpg","./img/theory/generalProvisions/1/4.jpg","./img/theory/generalProvisions/1/5.jpg","./img/theory/generalProvisions/1/6.jpg","./img/theory/generalProvisions/1/7.jpg"],"text":[["Дорога - это не просто полоса асфальта. Это место, где каждый участник движения должен соблюдать правила и уважать друг друга.","Пешеходы - наши самые уязвимые участники. Помни, что они всегда имеют преимущество на пешеходных переходах."],["В большинстве стран движение на дороге праворульное. Это означает, что при пересечении других транспортных средств, уступай дорогу тем, кто едет справа."],["Подчиняйтесь светофорам и дорожным знакам. Они указывают, когда можно двигаться и когда нужно остановиться."],["Соблюдай разумную скорость и безопасное расстояние между автомобилями. Это позволяет избежать аварий."],["Никогда не управляй транспортным средством, находясь под воздействием алкоголя или наркотиков. Это опасно и незаконно."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"generalTwo":{"title":"Общие обязанности водителей","subtitle":["1. Сосредоточенность и Безотвлекаемость","2. Скоростной Режим","3. Передача Приоритета","4. Наличие документов","5. Уступать Пешеходам"],"img":["./img/theory/generalProvisions/2/1.jpg",null,"./img/theory/generalProvisions/2/2.jpg","./img/theory/generalProvisions/2/3.jpg","./img/theory/generalProvisions/2/4.jpg"],"text":[["Внимание на дороге - главное правило. Избегайте отвлекающих действий, таких как разговоры по телефону."],["Уважайте ограничения скорости. Не превышайте их, чтобы обеспечить безопасность всех на дороге."],["Правильно уступайте дорогу согласно правилам. Помните о приоритетах."],["Водитель транспортного средства обязан иметь при себе удостоверение и по требованию сотрудников полиции передавать им, для проверки."],["Пешеходы всегда имеют преимущество на пешеходных переходах. Уступайте дорогу им."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"generalThree":{"title":"Применение специальных сигналов","subtitle":["1. Специальные сигналы","2. Сирена и Мигающие Маячки","3. Уступите Дорогу","4. Будьте Осторожны"],"img":["./img/theory/generalProvisions/3/1.jpg","./img/theory/generalProvisions/3/2.jpg","./img/theory/generalProvisions/3/3.jpg","./img/theory/generalProvisions/3/4.jpg"],"text":[["Специальные сигналы - это средство, которое используется служебными и аварийными транспортными средствами для обозначения их приоритета на дороге."],["Специальные сигналы обычно включают сирену и мигающие маячки. Это предупреждает других участников движения о неотложности их задачи."],["Когда вы видите служебное аварийное транспортное средство с включенными специальными сигналами, вы должны уступить дорогу и пропустить его."],["Водители должны быть особенно осторожными, когда видят транспортное средство с включенными специальными сигналами. Это может быть связано с неотложной медицинской помощью, пожаром или другой аварией. Важно помнить, что специальные сигналы используются для обеспечения безопасности и сохранения жизней. Уступайте дорогу и будьте осторожными, когда видите транспортное средство с включенными специальными сигналами на дороге."]]}},"roadSigns":{"priority":{"title":"Знаки приоритета","subtitle":["1. Знак \\"Уступите дорогу\\"","2. Знак \\"Главная дорога\\"","3. Знак \\"Пешеходный переход\\"","4. Знак \\"Велосипедисты\\"","5. Знак \\"Железнодорожный переезд\\"","6. Знак \\"Однопроходная дорога\\"","7. Знак \\"Конец полосы\\"","8. Знак \\"Пересечение с трамвайными путями\\"","9. Знак \\"Преимущество встречного движения\\"","10. Знак \\"Двустороннее движение\\""],"img":["./img/theory/roadSigns/1/1.jpg","./img/theory/roadSigns/1/2.jpg","./img/theory/roadSigns/1/3.jpg","./img/theory/roadSigns/1/4.jpg","./img/theory/roadSigns/1/5.jpg","./img/theory/roadSigns/1/6.jpg","./img/theory/roadSigns/1/7.jpg","./img/theory/roadSigns/1/8.jpg","./img/theory/roadSigns/1/9.jpg","./img/theory/roadSigns/1/10.jpg"],"text":[["Знак \\"Уступите дорогу\\" указывает, что вы должны уступить дорогу другим участникам движения."],["Знак \\"Главная дорога\\" показывает, что вы находитесь на главной дороге и имеете приоритет перед въезжающими с боковых дорог."],["Знак \\"Пешеходный переход\\" указывает на место, где пешеходы имеют приоритет при пересечении дороги."],["Знак \\"Велосипедисты\\" предупреждает о наличии велосипедной дорожки и обязывает уступить дорогу велосипедистам."],["Знак \\"Железнодорожный переезд\\" указывает на приближение к железнодорожным путям и обязывает уступить дорогу поездам."],["Знак \\"Однопроходная дорога\\" указывает, что дорога однопроходная, и вы должны уступить дорогу встречным транспортным средствам."],["Знак \\"Конец полосы\\" указывает на конец участка средней полосы и переход во владение встречного направления."],["Знак \\"Пересечение с трамвайными путями\\" предупреждает о наличии трамвайных путей и обязывает уступить дорогу трамваям."],["Знак \\"Преимущество встречного движения\\" указывает на приоритет движения водителей по встречной полосе и обязывает уступить дорогу встречному движению."],["Знак \\"Двустороннее движение\\" показывает, что дорога двусторонняя и участники движения могут двигаться в обоих направлениях."]]},"forbidding":{"title":"Запрещающие знаки","subtitle":["1. Сосредоточенность и Безотвлекаемость","2. Скоростной Режим","3. Передача Приоритета","4. Наличие документов","5. Уступать Пешеходам"],"img":["./img/theory/roadSigns/2/1.jpg","./img/theory/roadSigns/2/2.jpg","./img/theory/roadSigns/2/3.jpg","./img/theory/roadSigns/2/4.jpg","./img/theory/roadSigns/2/5.jpg","./img/theory/roadSigns/2/6.jpg","./img/theory/roadSigns/2/7.jpg","./img/theory/roadSigns/2/8.jpg","./img/theory/roadSigns/2/9.jpg","./img/theory/roadSigns/2/10.jpg"],"text":[["Внимание на дороге - главное правило. Избегайте отвлекающих действий, таких как разговоры по телефону."],["Уважайте ограничения скорости. Не превышайте их, чтобы обеспечить безопасность всех на дороге."],["Правильно уступайте дорогу согласно правилам. Помните о приоритетах."],["Водитель транспортного средства обязан иметь при себе удостоверение и по требованию сотрудников полиции передавать им, для проверки."],["Пешеходы всегда имеют преимущество на пешеходных переходах. Уступайте дорогу им."],["Перед использованием сотового телефона остановись в безопасном месте. Внимание на дороге — твоя первоочередная задача."],["Помни, что на дороге есть много разных участников, включая велосипедистов, мотоциклистов и пешеходов. Уважай их права и будь осторожен."]]},"prescriptive":{"title":"Предписывающие знаки","subtitle":["1. Знак \\"Двигаться прямо\\"","2. Знак \\"Поворот направо\\"","3. Знак \\"Поворот налево\\"","4. Знак \\"Двигаться в обратном направлении\\"","5. Знак \\"Объезд препятствия справа\\""],"img":["./img/theory/roadSigns/3/1.jpg","./img/theory/roadSigns/3/2.jpg","./img/theory/roadSigns/3/3.jpg","./img/theory/roadSigns/3/4.jpg","./img/theory/roadSigns/3/5.jpg","./img/theory/roadSigns/3/6.jpg"],"text":[["Знак с изображением стрелки, указывающей вперед, предписывает двигаться прямо, не поворачивая."],["Знак с изображением стрелки, указывающей направо, предписывает совершить правый поворот."],["Знак с изображением стрелки, указывающей налево, предписывает совершить левый поворот."],["Знак с изображением двух стрелок, указывающих в разные стороны, предписывает двигаться в обратном направлении."],["Знак указывает, что объезд различного рода препятствий на проезжей части разрешается со стороны, указанной стрелкой."],["Знак указывает, что движение организовано по кругу в направлении стрелок."]]}}}');
-    const cross_namespaceObject = JSON.parse('{"1":{"width":"320px","height":"215px","left":"470px","top":"90px","path":"./img/tests/intersections/cross1.jpg","car":[{"id":2,"direction":"right","path":"./img/tests/cars/b-car.png","x":60,"y":180,"deg":90,"povorot":"right"},{"id":1,"direction":"right","path":"./img/tests/cars/w-car.png","x":280,"y":180,"deg":90,"povorot":"right"},{"id":3,"direction":"right","path":"./img/tests/cars/y-car.png","x":650,"y":360,"deg":0,"povorot":"right"}],"answers":[{"sequence":"123"}]},"2":{"width":"320px","height":"215px","left":"470px","top":"283px","path":"./img/tests/intersections/cross2.jpg","car":[{"id":1,"direction":"default","path":"./img/tests/cars/y-car.png","x":340,"y":375,"deg":90,"povorot":"none"},{"id":2,"direction":"right","path":"./img/tests/cars/w-car.png","x":540,"y":110,"deg":180,"povorot":"right"},{"id":3,"direction":"left","path":"./img/tests/cars/b-car.png","x":650,"y":535,"deg":0,"povorot":"left"}],"answers":[{"sequence":"231"}]}}');
+    const cross_namespaceObject = JSON.parse('{"1":{"width":"320px","height":"215px","left":"470px","top":"90px","path":"./img/tests/intersections/cross1.jpg","all":3,"car":[{"id":2,"direction":"right","path":"./img/tests/cars/b-car.png","x":60,"y":180,"deg":90,"povorot":"right"},{"id":1,"direction":"right","path":"./img/tests/cars/w-car.png","x":280,"y":180,"deg":90,"povorot":"right"},{"id":3,"direction":"right","path":"./img/tests/cars/y-car.png","x":650,"y":360,"deg":0,"povorot":"right"}],"answers":[{"sequence":"123"}]},"2":{"width":"320px","height":"215px","left":"470px","top":"283px","path":"./img/tests/intersections/cross2.jpg","all":3,"car":[{"id":1,"direction":"default","path":"./img/tests/cars/y-car.png","x":340,"y":375,"deg":90,"povorot":"none"},{"id":2,"direction":"right","path":"./img/tests/cars/w-car.png","x":540,"y":110,"deg":180,"povorot":"right"},{"id":3,"direction":"left","path":"./img/tests/cars/b-car.png","x":650,"y":535,"deg":0,"povorot":"left"}],"answers":[{"sequence":"231"}]},"3":{"width":"135px","height":"50px","left":"515px","top":"410px","path":"./img/tests/intersections/cross3.jpg","all":2,"car":[{"id":1,"direction":"right","path":"./img/tests/cars/r-car.png","x":540,"y":80,"deg":180,"povorot":"right"},{"id":2,"direction":"left","path":"./img/tests/cars/b-car.png","x":550,"y":495,"deg":0,"povorot":"left"}],"answers":[{"sequence":"21"}]}}');
     class MousePRLX {
         constructor(props, data = null) {
             let defaultConfig = {
@@ -637,6 +646,11 @@
         }));
     };
     let inx = 1;
+    let nextbtn = document.querySelector(".next");
+    nextbtn.addEventListener("click", (() => {
+        inx++;
+        window.createTestWindow();
+    }));
     window.createTestWindow = () => {
         window.cars = [];
         let intersectionCenter = document.createElement("div");
@@ -649,13 +663,8 @@
         document.querySelector(".intersection").style.background = "url(" + cross_namespaceObject[inx].path + ")";
         for (let index = 0; index < cross_namespaceObject[inx].car.length; index++) {
             const car = cross_namespaceObject[inx].car[index];
-            new _ar(car.direction, intersectionCenter, car.path, car.x, car.y, car.deg, car.id, car.povorot);
+            new _ar(car.direction, intersectionCenter, car.path, car.x, car.y, car.deg, car.id, car.povorot, cross_namespaceObject[inx].all);
         }
-        let nextbtn = document.querySelector(".next");
-        nextbtn.addEventListener("click", (() => {
-            inx++;
-            window.createTestWindow();
-        }));
     };
     window.start = () => {
         let answer = false;

@@ -1299,7 +1299,7 @@ h6 {
 }
 .sidebar .playimg:hover,
 .sidebar .pauseimg:hover {
-  background-color: #000;
+  opacity: 0.5;
 }
 .sidebar.open {
   transition: all 0.2s ease-in-out;
