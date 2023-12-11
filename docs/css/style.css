@@ -965,7 +965,6 @@ h6 {
   align-items: center;
   color: #000;
   font-family: Rubik;
-  font-size: 2.125rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -977,6 +976,28 @@ h6 {
   text-align: justify;
   width: 100%;
   padding: 0 2rem;
+}
+@media (min-width: 114.375em) {
+  .item-link__title {
+    font-size: 2.125rem;
+  }
+}
+@media (min-width: 20em) and (max-width: 114.375em) {
+  @supports (font-size: clamp( 1.125rem , 0.9130794702rem  +  1.059602649vw , 2.125rem )) {
+    .item-link__title {
+      font-size: clamp( 1.125rem , 0.9130794702rem  +  1.059602649vw , 2.125rem );
+    }
+  }
+  @supports not (font-size: clamp( 1.125rem , 0.9130794702rem  +  1.059602649vw , 2.125rem )) {
+    .item-link__title {
+      font-size: calc(1.125rem + 1 * (100vw - 20rem) / 94.375);
+    }
+  }
+}
+@media (max-width: 20em) {
+  .item-link__title {
+    font-size: 1.125rem;
+  }
 }
 .item-link__title > img {
   padding-left: 0.625rem;
@@ -990,11 +1011,32 @@ h6 {
   color: #fff;
   text-align: center;
   font-family: Rubik;
-  font-size: 1.875rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   transition: color 0.2s ease-in-out;
+}
+@media (min-width: 114.375em) {
+  .item-link__link {
+    font-size: 2rem;
+  }
+}
+@media (min-width: 20em) and (max-width: 114.375em) {
+  @supports (font-size: clamp( 1rem , 0.7880794702rem  +  1.059602649vw , 2rem )) {
+    .item-link__link {
+      font-size: clamp( 1rem , 0.7880794702rem  +  1.059602649vw , 2rem );
+    }
+  }
+  @supports not (font-size: clamp( 1rem , 0.7880794702rem  +  1.059602649vw , 2rem )) {
+    .item-link__link {
+      font-size: calc(1rem + 1 * (100vw - 20rem) / 94.375);
+    }
+  }
+}
+@media (max-width: 20em) {
+  .item-link__link {
+    font-size: 1rem;
+  }
 }
 .item-link__link:hover {
   color: #b5b5b5;
