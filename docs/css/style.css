@@ -1003,12 +1003,25 @@ h6 {
   margin-top: 1.375rem;
 }
 
+.tests {
+  margin-top: 0.625rem;
+}
+
 .intersection {
   position: relative;
   margin: 0 auto;
+  margin-top: 0.625rem;
   width: 78.1875rem;
   height: 48.0625rem;
   overflow: hidden;
+}
+
+.result {
+  font-size: 2rem;
+}
+.result span {
+  display: block;
+  margin-top: 1.25rem;
 }
 
 .border {
@@ -1172,13 +1185,17 @@ h6 {
   }
 }
 .next {
+  margin-left: auto;
   padding: 0.625rem 1.25rem;
   color: #000;
   font-size: 1.5rem;
   text-align: center;
+  margin-right: 1.25rem;
   border: 0.125rem solid #00adb4;
   border-radius: 0.3125rem;
   transition: all 0.2s ease-in-out;
+  margin-top: 0.625rem;
+  margin-left: 1.25rem;
 }
 .next:hover {
   background-color: #01979c;
@@ -1187,6 +1204,61 @@ h6 {
   pointer-events: none;
   background-color: #9c9c9c;
   border: 0.125rem solid #000;
+}
+
+.btns {
+  display: block;
+  text-align: center;
+}
+
+.answerbtn {
+  padding: 0.625rem 1.25rem;
+  color: #000;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-right: 1.25rem;
+  border: 0.125rem solid #00adb4;
+  border-radius: 0.3125rem;
+  transition: all 0.2s ease-in-out;
+  margin-top: 0.625rem;
+}
+.answerbtn:hover {
+  background-color: #01979c;
+}
+.answerbtn:disabled {
+  pointer-events: none;
+  background-color: #9c9c9c;
+  border: 0.125rem solid #000;
+}
+
+.justtesttext {
+  cursor: pointer;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  padding: 1.25rem;
+  gap: 10px;
+  background-color: #ffd05b;
+  border-radius: 1rem;
+}
+
+input[name=question] {
+  cursor: pointer;
+}
+
+.question {
+  background-color: #00adb4;
+  border: 0.125rem solid #000;
+  font-size: 3rem;
+  padding: 2rem;
+  border-radius: 1.25rem;
+}
+
+.answerText {
+  position: absolute;
+  color: #7cc800;
+  font-size: 1.75rem;
 }
 
 .preloader {
