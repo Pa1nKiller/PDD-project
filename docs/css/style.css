@@ -1301,6 +1301,7 @@ input[name=question] {
   position: absolute;
   color: #7cc800;
   font-size: 1.75rem;
+  background-color: rgb(39, 37, 37);
 }
 
 .preloader {
