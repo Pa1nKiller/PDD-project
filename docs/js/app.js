@@ -713,7 +713,7 @@
         let resultHTML = document.createElement("div");
         resultHTML.classList.add("result");
         intersection.appendChild(resultHTML);
-        for (let index = 0; index < window.ANSWER.length; index++) if (window.ANSWER[index].is) resultHTML.innerHTML += `<span style="color:green;">${index + 1}</span>`; else resultHTML.innerHTML += `<span style="color:red;">${index + 1} -  ${ANSWER[index].text}</span>`;
+        for (let index = 0; index < window.ANSWER.length; index++) if (window.ANSWER[index].is) resultHTML.innerHTML += `<span style="color:green;">${index + 1} - Ответ правильный</span>`; else resultHTML.innerHTML += `<span style="color:red;">${index + 1} -  ${ANSWER[index].text}</span>`;
     };
     window.createTestWindowJusttest = () => {
         nextbtn.disabled = true;

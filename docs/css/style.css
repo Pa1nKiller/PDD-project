@@ -535,10 +535,6 @@ h6 {
     font-size: 1.25rem;
   }
 }
-.footer-btn__icon {
-  transform: translate3d(0, -40%, 0);
-  animation: spin 1.8s infinite linear;
-}
 @media (max-width: 47.99875em) {
   .footer-btn__icon {
     display: none;
@@ -570,17 +566,6 @@ h6 {
   background: #01979c;
 }
 
-@keyframes spin {
-  0% {
-    transform: translate3d(0, -40%, 0);
-  }
-  50% {
-    transform: translate3d(0, 40%, 0);
-  }
-  100% {
-    transform: translate3d(0, -40%, 0);
-  }
-}
 @media (max-width: 106.25rem) {
   .welcome-page__cone {
     position: absolute;
@@ -692,7 +677,7 @@ h6 {
   border-radius: 0 0 2.4rem 2.4rem;
   background: #00adb4;
   text-wrap: nowrap;
-  width: 100%;
+  width: 23.75rem;
   height: 3.75rem;
   transition: background-color 0.3s ease-in-out;
 }
