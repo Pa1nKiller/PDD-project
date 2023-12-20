@@ -535,6 +535,10 @@ h6 {
     font-size: 1.25rem;
   }
 }
+.footer-btn__icon {
+  transform: translate3d(0, -40%, 0);
+  animation: spin 1.8s infinite linear;
+}
 @media (max-width: 47.99875em) {
   .footer-btn__icon {
     display: none;
@@ -566,6 +570,17 @@ h6 {
   background: #01979c;
 }
 
+@keyframes spin {
+  0% {
+    transform: translate3d(0, -40%, 0);
+  }
+  50% {
+    transform: translate3d(0, 40%, 0);
+  }
+  100% {
+    transform: translate3d(0, -40%, 0);
+  }
+}
 @media (max-width: 106.25rem) {
   .welcome-page__cone {
     position: absolute;
